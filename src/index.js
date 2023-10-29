@@ -1,17 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import Header from "./components/Header";
+import Login from "./components/Login";
+import ToDoApp from "./components/ToDoApp";
+import AuthContextProvider from "./service/auth_service";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+function Layout() {
+  return (
+    <AuthContextProvider>
+      <Header />
+      <Outlet />
+    </AuthContextProvider>
+  );
+}
+
+const browserRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "todo", element: <ToDoApp /> },
+    ],
+    errorElement: <h1>Error Occured</h1>,
+  },
+]);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={browserRouter}></RouterProvider>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
